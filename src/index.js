@@ -9,7 +9,7 @@ async function getUniversityAPIData (countryName) {
             throw "Erro: País não informado"
         }
 
-        const { data } = await axios.get(BASE_URL + countryame)
+        const { data } = await axios.get(BASE_URL + countryName)
         
         return data
 
@@ -31,12 +31,16 @@ async function run () {
         "uruguay"
     ]
 
+    let universityCollection = []
+
     for (countryName of countries) {
-    
         const universityData = await getUniversityAPIData(countryName)
-        const university = await University.create(universityData)
+        universityCollection = [...universityCollection, ...universityData]
     }
-    process.exit(1);
+
+    const university = await University.insertMany(universityCollection)
+
+    process.exit(0);
 }
 
 run()
