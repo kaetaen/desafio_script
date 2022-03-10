@@ -1,17 +1,16 @@
 const axios = require('axios')
+const University = require('../src/models/University') 
 
-async function getUniversityAPIData (country_name) {
+async function getUniversityAPIData (countryName) {
     const BASE_URL = "http://universities.hipolabs.com/search?country="
 
     try {
-
-        if (!country_name) 
+        if (!countryName) {
             throw "Erro: País não informado"
+        }
+
+        const { data } = await axios.get(BASE_URL + countryame)
         
-        if (!countries.includes(country_name)) 
-            throw "Erro: País não listado"
-        
-        const { data } = await axios.get(BASE_URL + country_name)
         return data
 
     } catch (e) {
@@ -32,9 +31,12 @@ async function run () {
         "uruguay"
     ]
 
-    for (country in countries) {
-        const universityData = await getUniversityAPIData(country)
+    for (countryName of countries) {
+    
+        const universityData = await getUniversityAPIData(countryName)
+        const university = await University.create(universityData)
     }
+    process.exit(1);
 }
 
 run()
